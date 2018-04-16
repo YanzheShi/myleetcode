@@ -1,3 +1,7 @@
+package com.github.yanzheshi;
+
+import com.github.yanzheshi.Solution;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
