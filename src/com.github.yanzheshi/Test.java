@@ -11,13 +11,15 @@ import java.util.Map;
  */
 public class Test {
     public static void main(String[] args) {
-        String[] strs = {"a", "b"};
-        Solution s = new Solution();
 
 
-        int[] a = {1, 3};
-        int[] b = {2};
+        ListNode listNode = new ListNode(1);
+        listNode.next = new ListNode(2);
+        listNode.next.next = new ListNode(3);
+        listNode.next.next.next = new ListNode(4);
 
-        System.out.println(s.findMedianSortedArrays(a, b));
+        Solution solution = new Solution();
+        System.out.println(solution.swapPairs(listNode));
+
     }
 }

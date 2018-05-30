@@ -538,6 +538,37 @@ public class Solution {
         }
         return new ArrayList<>(result);
     }
+
+
+    /**
+     * Question 24. Swap Nodes in Pairs
+     * 对链表中两个相邻的元素进行交换
+     * @param head
+     * @return
+     */
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode p = head;
+        head = head.next;
+        ListNode pre = null;
+
+        while (p != null && p.next != null) {
+            ListNode q = p.next;
+            if (pre != null) {
+                pre.next = q;
+            }
+
+            p.next = q.next;
+            q.next = p;
+
+            pre = p;
+            p = p.next;
+        }
+        return head;
+    }
 }
 
 class ListNode {
