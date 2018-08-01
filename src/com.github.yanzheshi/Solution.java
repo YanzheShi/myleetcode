@@ -569,10 +569,69 @@ public class Solution {
         }
         return head;
     }
+
+    /**
+     * Question 25 Reverse Nodes in k-Group
+     * @param head
+     * @param k
+     * @return
+     */
+    public ListNode reverseKGroup(ListNode head, int k) {
+
+        if (k == 1 || head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode begin = null;
+        ListNode p = head;
+        ListNode last;
+        boolean hasNewHead = false;
+
+
+        while (p != null) {
+            last = begin;
+            begin = p;
+            for (int i = 0; p != null && i < k - 1; i++) {
+                p = p.next;
+            }
+            if (p == null) {
+
+                break;
+            }
+            ListNode tem = p.next;
+            p.next = null;
+
+            ListNode tail = reverseList(begin);
+            if (!hasNewHead) {
+                hasNewHead = true;
+                head = tail;
+            }
+            p = tem;
+            begin.next = p;
+
+            if (last != null) {
+                last.next = tail;
+            }
+
+        }
+
+        return head;
+    }
+
+    public ListNode reverseList(ListNode head) {
+        ListNode pre = head;
+        ListNode cur = head.next;
+        head.next = null;
+
+        while (cur != null) {
+            ListNode tem = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = tem;
+        }
+
+        return pre;
+    }
 }
 
-class ListNode {
-      int val;
-      ListNode next;
-      ListNode(int x) { val = x; }
- }
+

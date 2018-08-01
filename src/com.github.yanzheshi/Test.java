@@ -12,14 +12,12 @@ import java.util.Map;
 public class Test {
     public static void main(String[] args) {
 
-
-        ListNode listNode = new ListNode(1);
-        listNode.next = new ListNode(2);
-        listNode.next.next = new ListNode(3);
-        listNode.next.next.next = new ListNode(4);
+        ListNode list = new ListNode(1, 2);
+        System.out.println(list);
 
         Solution solution = new Solution();
-        System.out.println(solution.swapPairs(listNode));
+
+        System.out.println(solution.reverseKGroup(list,3 ));
 
     }
 }
