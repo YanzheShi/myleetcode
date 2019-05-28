@@ -1,6 +1,9 @@
 package com.github.yanzheshi;
 
+import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author shiyanzhe
@@ -350,6 +353,88 @@ public class Solution {
             return Math.max(nums1[i - 1], nums2[j - 1]);
         }
         return 0.0;
+    }
+
+    /**
+     * leetcode question 8 字符串转化为数字
+     * @param str
+     * @return
+     */
+    public int myAtoi(String str) {
+        long res = 0;
+        int i = 0;
+        for (; i < str.length(); i++) {
+            if (str.charAt(i) != ' ') {
+                break;
+            }
+        }
+        if (i >= str.length()) {
+            return 0;
+        }
+
+        if ("+-1234567890".indexOf(str.charAt(i)) == -1) {
+            return 0;
+        }
+
+        int minus = 1;
+        if (str.charAt(i) == '-') {
+            minus = -1;
+            i++;
+        } else if (str.charAt(i) == '+') {
+            minus = 1;
+            i++;
+        }
+        for (;i < str.length() && "1234567890".indexOf(str.charAt(i)) != -1; i++) {
+            res *= 10;
+            res = res + minus * (str.charAt(i) - '0');
+            if (minus == -1 && res < Integer.MIN_VALUE) {
+                return Integer.MIN_VALUE;
+            }
+            if (minus == 1 && res > Integer.MAX_VALUE) {
+                return Integer.MAX_VALUE;
+            }
+        }
+        return (int)res;
+    }
+
+    /**
+     * leetcode question 15 输出nums中三数之和为0的所有元组
+     * @param nums
+     * @return
+     */
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new LinkedList<>();
+        if (nums.length < 3) {
+            return result;
+        }
+        // 分组统计每个数的数量
+        Map<Integer, Long> countMap = IntStream.of(nums).boxed().collect(
+            Collectors.groupingBy(a -> a, TreeMap::new, Collectors.counting()));
+
+        List<Integer> sortNum = new ArrayList<>(countMap.keySet());
+        // 保证 a <= b <= c
+        for (int i = 0; i < sortNum.size(); i++) {
+            int a = sortNum.get(i);
+            long aCount = countMap.get(a);
+            int j = aCount > 1 ? i : i + 1;
+            for (; j < sortNum.size(); j++) {
+                int b = sortNum.get(j);
+                int c = -(a + b);
+                if (c < b || !countMap.containsKey(c)) {
+                    continue;
+                }
+                if (b == c) {
+                    if (a == b && aCount < 3) {
+                        continue;
+                    }
+                    if (countMap.get(b) < 2) {
+                        continue;
+                    }
+                }
+                result.add(Arrays.asList(a, b, c));
+            }
+        }
+        return result;
     }
 
     /**

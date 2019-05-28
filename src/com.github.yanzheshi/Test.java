@@ -12,12 +12,9 @@ import java.util.Map;
 public class Test {
     public static void main(String[] args) {
 
-        ListNode list = new ListNode(1, 2);
-        System.out.println(list);
-
         Solution solution = new Solution();
-
-        System.out.println(solution.reverseKGroup(list,3 ));
+        int[] num = {-1, 0, 1, 2, -1, -4};
+        System.out.println(solution.myAtoi("-" ));
 
     }
 }
