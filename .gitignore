@@ -6,4 +6,5 @@
 *.classpath
 */target/*
 target.
+/out
 
