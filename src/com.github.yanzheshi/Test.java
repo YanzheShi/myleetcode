@@ -13,8 +13,8 @@ public class Test {
     public static void main(String[] args) {
 
         Solution solution = new Solution();
-        int[] num = {-1, 0, 1, 2, -1, -4};
-        System.out.println(solution.myAtoi("-" ));
+        int[] num = {1,2,2};
+        System.out.println(solution.minIncrementForUnique(num ));
 
     }
 }
