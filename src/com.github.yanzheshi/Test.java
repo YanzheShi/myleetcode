@@ -2,9 +2,8 @@ package com.github.yanzheshi;
 
 import com.github.yanzheshi.Solution;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLOutput;
+import java.util.*;
 
 /**
  * @author shiyanzhe
@@ -14,7 +13,11 @@ public class Test {
 
         Solution solution = new Solution();
         int[] num = {1,2,2};
-        System.out.println(solution.minIncrementForUnique(num ));
+
+        List<List<Integer>> combine = solution.combine(8, 7);
+
+        System.out.println(combine);
+
 
     }
 }

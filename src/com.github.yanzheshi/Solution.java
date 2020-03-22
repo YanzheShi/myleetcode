@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * @author shiyanzhe
@@ -733,6 +734,66 @@ public class Solution {
             }
         }
         return count;
+    }
+
+    /**
+     * 77  返回C(n, k)
+     * 根据 C(n, k) = C(n-1, k - 1) + C(n - 1, k) 进行递推
+     * @param n
+     * @param k
+     * @return
+     */
+    public List<List<Integer>> combine(int n, int k) {
+        // 从 C(0,0)
+        List<List<Integer>> begin = new ArrayList<>(1);
+        begin.add(new ArrayList<>());
+        if (k == 0) {
+            return begin;
+        }
+        // a用于递推
+        List<List<List<Integer>>> a = new ArrayList<>(k+1);
+        a.add(begin);
+
+        // 由于C(n, k) = C(n, n-k) 通过转化减少递推次数
+        boolean trans = false;
+        if (k > n / 2) {
+            k = n - k;
+            trans = true;
+        }
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = Math.min(k, i); j > 0; j--) {
+                // i, j 代表C(i, j)
+                // 等于 C(i-1, j) 的元素 + C(i - 1, j - 1)的每个元素追加i
+                List<List<Integer>> cij;
+                if (j < i) {
+                    cij = a.get(j);
+                } else {
+                    cij = new ArrayList<>();
+                    a.add(cij);
+                }
+                for (List<Integer> integers : a.get(j - 1)) {
+                    List<Integer> tem = new ArrayList<>(integers);
+                    tem.add(i);
+                    cij.add(tem);
+                }
+                if(i == n && j == k){
+                    break;
+                }
+            }
+        }
+        List<List<Integer>> res = a.get(k);
+
+        if (trans) {
+            // 求补集返回正确结果
+            List<Integer> allNumber = Stream.iterate(1, i -> ++i).limit(n).collect(Collectors.toList());
+            for (int i = 0; i < res.size(); i++) {
+                List<Integer> integers = res.get(i);
+                List<Integer> tem = new ArrayList<>(allNumber);
+                tem.removeAll(res.get(i));
+                res.set(i, tem);
+            }
+        }
+        return res;
     }
 }
 
