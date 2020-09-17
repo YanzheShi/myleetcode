@@ -1,6 +1,5 @@
 package com.github.yanzheshi;
 
-import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -796,6 +795,91 @@ public class Solution {
         return res;
     }
 
+    /**
+     * 27 移除元素
+     * 暴力解法， 类似数组删除元素， 几何时间复杂度 n*n
+     * @param nums
+     * @param val
+     * @return
+     */
+    public int removeElement(int[] nums, int val) {
+        int length = nums.length;
+        // 去掉尾部
+        for (int i = length - 1; i >= 0; i--) {
+            if (nums[i] == val) {
+                length--;
+                continue;
+            } else {
+                break;
+            }
+        }
+
+        for (int i = length - 1; i > 0; i--) {
+            if (nums[i - 1] == val) {
+                length--;
+                for (int j = i; j <= length; j++) {
+                    nums[j - 1] = nums[j];
+                }
+            }
+        }
+        return length;
+    }
+
+    /**
+     * 27 移除元素
+     * 暴力解法， 类似数组删除元素， 几何时间复杂度 n*n
+     * @param nums
+     * @param val
+     * @return
+     */
+    public int removeElement1(int[] nums, int val) {
+        int i = 0;
+
+        for (int j = 0; j < nums.length; j++) {
+            if (nums[j] != val) {
+                nums[i++] = nums[j];
+            }
+        }
+        return i;
+    }
+
+    /**
+     * leetcode 39 组合总和
+     * @param candidates
+     * @param target
+     * @return
+     */
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+
+        List<Integer> cur = new ArrayList<>();
+        List<List<Integer>> result = new ArrayList<>();
+
+        Arrays.sort(candidates);
+
+        dfs(result, cur, candidates, target);
+
+        return result;
+    }
+
+    public void dfs(List<List<Integer>> result, List<Integer> cur, int[] candidates, int target) {
+
+        for (int candidate : candidates) {
+            // 避免重复
+            if ( cur.size() > 0 &&  candidate < cur.get(cur.size() - 1)) {
+                continue;
+            }
+            if (target < candidate) {
+                return;
+            }
+            List<Integer> list = new ArrayList<>(cur);
+            list.add(candidate);
+            if (candidate == target) {
+                result.add(list);
+                return;
+            }
+            dfs(result, list, candidates, target - candidate);
+        }
+    }
 
 }
 
