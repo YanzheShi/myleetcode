@@ -881,6 +881,50 @@ public class Solution {
         }
     }
 
+    /**
+     * leetcode 40 组合总和
+     * @param candidates
+     * @param target
+     * @return
+     */
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+
+        List<Integer> cur = new ArrayList<>();
+        List<List<Integer>> result = new ArrayList<>();
+
+        Arrays.sort(candidates);
+
+        TreeMap<Integer, Long> map = Arrays.stream(candidates).boxed().collect(Collectors.groupingBy(a -> a, TreeMap::new, Collectors.counting()));
+        Set<Integer> set = new TreeSet<>(map.keySet());
+        dfs2(result, cur, set, map, target);
+
+        return result;
+    }
+
+    public void dfs2(List<List<Integer>> result, List<Integer> cur, Set<Integer> set, Map<Integer, Long> map, int target) {
+
+        for (Integer candidate : set) {
+            if (target < candidate) {
+                return;
+            }
+            // 避免重复
+            Long count = map.get(candidate);
+            if (( cur.size() > 0 &&  candidate < cur.get(cur.size() - 1)) || count < 1) {
+                continue;
+            }
+            List<Integer> list = new ArrayList<>(cur);
+            list.add(candidate);
+            if (candidate == target) {
+                result.add(list);
+                return;
+            }
+            map.put(candidate, count - 1);
+            dfs2(result, list, set, map,target - candidate);
+            map.put(candidate, count);
+        }
+    }
+
+
 }
 
 
