@@ -877,7 +877,37 @@ public class Solution {
                 result.add(list);
                 return;
             }
-            dfs(result, list, candidates, target - candidate);
+            dfs3(result, list, candidates, target - candidate);
+        }
+    }
+
+    /**
+     * 优化， 避免复制无用的数组
+     * @param result
+     * @param cur
+     * @param candidates
+     * @param target
+     */
+    public void dfs3(List<List<Integer>> result, List<Integer> cur, int[] candidates, int target) {
+        for (int candidate : candidates) {
+            // 避免重复
+            if ( cur.size() > 0 &&  candidate < cur.get(cur.size() - 1)) {
+                continue;
+            }
+            if (target < candidate) {
+                return;
+            }
+            cur.add(candidate);
+            if (candidate == target) {
+                List<Integer> list = new ArrayList<>(cur);
+                result.add(list);
+                // 退出前移除末尾元素
+                cur.remove(cur.size() - 1);
+                return;
+            }
+            dfs(result, cur, candidates, target - candidate);
+            // 移除末尾元素
+            cur.remove(cur.size() - 1);
         }
     }
 
@@ -912,15 +942,17 @@ public class Solution {
             if (( cur.size() > 0 &&  candidate < cur.get(cur.size() - 1)) || count < 1) {
                 continue;
             }
-            List<Integer> list = new ArrayList<>(cur);
-            list.add(candidate);
+            cur.add(candidate);
             if (candidate == target) {
+                List<Integer> list = new ArrayList<>(cur);
                 result.add(list);
+                cur.remove(cur.size() - 1);
                 return;
             }
             map.put(candidate, count - 1);
-            dfs2(result, list, set, map,target - candidate);
+            dfs2(result, cur, set, map,target - candidate);
             map.put(candidate, count);
+            cur.remove(cur.size() - 1);
         }
     }
 
