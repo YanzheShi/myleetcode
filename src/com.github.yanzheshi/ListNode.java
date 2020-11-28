@@ -5,8 +5,10 @@ package com.github.yanzheshi;
  * @date 2018/8/1
  */
 public class ListNode {
+
     int val;
     ListNode next;
+    ListNode random;
 
     ListNode() {}
 

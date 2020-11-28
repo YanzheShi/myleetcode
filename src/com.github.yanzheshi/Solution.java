@@ -956,6 +956,54 @@ public class Solution {
         }
     }
 
+    // 逆序k前面链表
+    public ListNode reverseK(ListNode head, int k){
+
+        ListNode p = head;
+
+//         找到第k个节点
+        for (int i = 0; i < k && p!= null; i++) {
+            p = p.next;
+        }
+
+
+        ListNode tem = p.next;
+//        截断
+        p.next = null;
+
+        ListNode newHead = reverse(head);
+
+//        接上
+        p = newHead;
+        while(p.next != null){
+            p  = p.next;
+        }
+        p.next = tem;
+        return newHead;
+    }
+
+
+    // 逆序单链表
+    public ListNode reverse(ListNode head){
+
+        ListNode temhead = new ListNode();
+
+        ListNode p = head;
+
+        while (p != null) {
+            ListNode q = temhead.next;
+            temhead.next = p;
+
+            ListNode n = p.next;
+            p.next = q;
+
+            p = n;
+        }
+
+        return temhead.next;
+
+    }
+
 
 }
 

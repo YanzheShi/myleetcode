@@ -14,13 +14,12 @@ public class Test {
     public static void main(String[] args) {
 
         Solution solution = new Solution();
-        int[] num = {2,5,2,1,2};
 
-        List<List<Integer>> lists = solution.combinationSum2(num, 5);
+        NowCoder nowCoder = new NowCoder();
 
-        for (List<Integer> list : lists) {
-            System.out.println(list);
-        }
+
+        String s = "babadefgh";
+
 
 
     }
