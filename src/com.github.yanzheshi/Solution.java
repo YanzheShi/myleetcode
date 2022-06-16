@@ -102,12 +102,7 @@ public class Solution {
         StringBuilder s = new StringBuilder(x+"");
         return s.reverse().toString().equals(x+"");
     }
-    public boolean isMatch(String s, String p) {
-        boolean match = true;
-        for (int i = 0, j = 0; i < s.length() && j < p.length();) {
-        }
-        return match;
-    }
+
     public int maxArea(int[] height) {
         int result = 1;
         for (int i = 0; i < height.length; i++) {
@@ -1003,6 +998,183 @@ public class Solution {
         return temhead.next;
 
     }
+
+    /**
+     * leetcode 44 ,字符串匹配
+     * @param s
+     * @param p
+     * @return
+     */
+    public boolean isMatch(String s, String p) {
+        if (s.equals(p)) {
+            return true;
+        }
+
+        if (p.indexOf("*") == -1 && s.length() != p.length()) {
+            return false;
+        }
+
+        String[] split = p.split("\\*");
+//        System.out.println(Arrays.toString(split));
+        if (split.length == 0) {
+            // 说明全是*
+            return true;
+        }
+
+        // 匹配开头和结尾
+        int startOffset = 0;
+        if (!split[0].isEmpty()) {
+            startOffset = split[0].length();
+            if (!startWith(s, split[0])) {
+                return false;
+            }
+        }
+
+
+        if (!p.endsWith("*") && !split[split.length-1].isEmpty() && split.length != 1) {
+            if (!endWith(s.substring(startOffset), split[split.length-1])) {
+                return false;
+            }
+        }
+
+        int pend = split.length - 1;
+        int endOffset = split[split.length - 1].length();
+        if (p.endsWith("*")) {
+            pend = split.length;
+            endOffset = 0;
+        }
+
+        int j = split[0].length();
+        for (int i = 1; i < pend; i++) {
+            int k = 0;
+            int jStart = j;
+            for (; k < split[i].length() && j < s.length() - endOffset;) {
+                if (split[i].charAt(k) == '?') {
+                    k++;
+                    j++;
+                } else if (split[i].charAt(k) == s.charAt(j)) {
+                    j++;
+                    k++;
+                } else {
+                    j = ++jStart;
+                    // 回溯
+                    k = 0;
+                }
+
+            }
+            if (k != split[i].length()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean startWith(String s, String p) {
+        if (p.length() > s.length()) {
+            return false;
+        }
+        for (int i = 0; i < p.length() && i < s.length(); i++) {
+            if (p.charAt(i) != '?' && p.charAt(i) != s.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean endWith(String s, String p) {
+        if (p.length() > s.length()) {
+            return false;
+        }
+        for (int i = p.length()-1, j = s.length()-1; i >= 0 && j >= 0 ; i--, j--) {
+            if (p.charAt(i) != '?' && p.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * LeetCode 10 字符串匹配
+     * @param s
+     * @param p
+     * @return
+     */
+    public boolean isMatch10(String s, String p) {
+
+        if (s.equals(p)) {
+            return true;
+        }
+
+        if (p.indexOf("*") == -1 && s.length() != p.length()) {
+            return false;
+        }
+
+        if (!p.contains(".") && !p.contains("*") && getLetterCount(s) != getLetterCount(p)) {
+            return false;
+        }
+
+        int startC = 0;
+        for (int i = 0; i < p.length(); i++) {
+            if (p.charAt(i) == '*') {
+                startC++;
+            }
+        }
+        int fillCount = Math.min(s.length(), s.length() - (p.length() - startC * 2));
+
+        return dfs(s, p, fillCount);
+    }
+
+    public boolean dfs(String s, String p, int fillCount) {
+
+        if (s.isEmpty() && p.isEmpty()) {
+            // 匹配完毕
+            return true;
+        }
+
+        if (1 < p.length() && p.charAt(1) == '*') {
+            char front = p.charAt(0);
+            int k = 0;
+            if (!p.substring(2).contains("*")) {
+                k = s.length() - p.length();
+            }
+
+            for (; k <= fillCount; k++) {
+                // 填充前一个字符后比较
+                if (dfs(s, fillChar(k, front) + p.substring(2), fillCount - k)) {
+                    return true;
+                }
+            }
+        }
+
+        if (s.isEmpty() || p.isEmpty()) {
+            // 匹配未完成
+            return false;
+        }
+
+        if (p.charAt(0) == '.'|| p.charAt(0) == s.charAt(0)) {
+            return dfs(s.substring(1), p.substring(1), fillCount);
+        }
+        return false;
+    }
+
+    public String fillChar(int count, char c) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
+    public int getLetterCount(String s) {
+        Set set = new HashSet();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) != '*' && s.charAt(i) != '.') {
+                set.add(s.charAt(i));
+            }
+        }
+        return set.size();
+    }
+
 
 
 }
