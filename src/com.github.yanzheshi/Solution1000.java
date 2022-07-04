@@ -267,6 +267,7 @@ public class Solution1000 {
 
     /**
      * leetcode 719
+     * 答案错误
      * @param nums
      * @param k
      * @return
@@ -296,6 +297,13 @@ public class Solution1000 {
         return res[res.length+1-r];
     }
 
+    /**
+     * leetcode 719
+     * 内存超限
+     * @param nums
+     * @param k
+     * @return
+     */
     public int smallestDistancePair2(int[] nums, int k) {
 
         Arrays.sort(nums);
@@ -316,6 +324,14 @@ public class Solution1000 {
         return res[k-1];
     }
 
+    /**
+     * leetcode 719
+     * 使用堆
+     * 内存超限
+     * @param nums
+     * @param k
+     * @return
+     */
     public int smallestDistancePair3(int[] nums, int k) {
 
 //        Arrays.sort(nums);
@@ -371,4 +387,319 @@ public class Solution1000 {
         }
         return queue.peek();
     }
+
+    /**
+     * leetcode 719
+     * 二分搜索k值
+     * @param nums
+     * @param k
+     * @return
+     */
+    public int smallestDistancePair5(int[] nums, int k) {
+
+        Arrays.sort(nums);
+
+        int left = 0, right = nums[nums.length - 1] - nums[0];
+
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (getLessCount(nums, mid) >= k) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return left;
+    }
+
+    /**
+     * 通过二分查找比value小的个数
+     * @param nums
+     * @param value
+     * @return
+     */
+    public int getLessCount(int[] nums, int value) {
+
+        int count = 0;
+        for (int i = nums.length-1; i > 0; i--) {
+            int left = 0, right = i;
+            while (left <= right) {
+                int mid = (left + right) / 2;
+                if (nums[i] - nums[mid] > value) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+            count = count + i - left;
+        }
+
+        return count;
+    }
+
+    /**
+     * 通过双指针查找小于value的个数
+     * @param nums
+     * @param value
+     * @return
+     */
+    public int getLessCount1(int[] nums, int value) {
+
+
+        int i, j;
+        int count =0 ;
+        for (i = 0, j = 0; j < nums.length; j++) {
+            while (nums[j] - nums[i] > value) {
+                i++;
+            }
+            count+=j-i;
+        }
+        return count;
+    }
+
+    /**
+     *
+     * @param nums
+     * @param k
+     * @return
+     */
+    public int smallestDistancePair6(int[] nums, int k) {
+        Arrays.sort(nums);
+        int n = nums.length, left = 0, right = nums[n - 1] - nums[0];
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            int cnt = 0;
+            for (int j = 0; j < n; j++) {
+                int i = binarySearch(nums, j, nums[j] - mid);
+                cnt += j - i;
+            }
+            if (cnt >= k) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    public int binarySearch(int[] nums, int end, int target) {
+        int left = 0, right = end;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return left;
+    }
+
+    public int smallestDistancePair7(int[] nums, int k) {
+        Arrays.sort(nums);
+
+        int left = 0, right = nums[nums.length - 1] - nums[0];
+
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            int count = 0;
+            int i, j;
+            for (i = 0, j = 0; j < nums.length; j++) {
+                while (nums[j] - nums[i] > mid) {
+                    i++;
+                }
+                count+=j-i;
+            }
+            if (count >= k) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return left;
+    }
+
+    /**
+     * leetcode 1089
+     * ac
+     * @param arr
+     */
+    public void duplicateZeros(int[] arr) {
+
+        int zeroCount = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == 0) {
+                zeroCount++;
+            }
+        }
+
+        for (int i = arr.length-1; i >= 0  ; i--) {
+            if (i + zeroCount < arr.length) {
+                arr[i + zeroCount] = arr[i];
+            }
+            if (arr[i] == 0) {
+                zeroCount--;
+                if (i + zeroCount < arr.length) {
+                    arr[i + zeroCount] = 0;
+                }
+            }
+        }
+    }
+
+    /**
+     * leetcode 593
+     * @param p1
+     * @param p2
+     * @param p3
+     * @param p4
+     * @return
+     */
+    public boolean validSquare(int[] p1, int[] p2, int[] p3, int[] p4) {
+
+        int[] dis = new int[6];
+        dis[0] = getDisPow(p1, p2);
+        dis[1] = getDisPow(p1, p3);
+        dis[2] = getDisPow(p1, p4);
+        dis[3] = getDisPow(p2, p3);
+        dis[4] = getDisPow(p2, p4);
+        dis[5] = getDisPow(p3, p4);
+
+        Arrays.sort(dis);
+
+        return (dis[0] == dis[1] && dis[2] == dis[3] && dis[0] == dis[2]
+                && dis[4] == dis[5] && dis[0] != 0);
+    }
+
+    public int getDisPow(int[] p1, int[] p2) {
+        return (p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]);
+    }
+
+
+    public String replaceSpace(String s) {
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c != ' ') {
+                sb.append(c);
+            } else {
+                sb.append("%20");
+            }
+        }
+        return sb.toString();
+    }
+
+
+    /**
+     * LeetCode
+     * 剑指offer II 029 排序的循环链表
+     * 本来一次循环可以解决，但是无法解决链表元素都相等的情况，所以一开始又特殊判断了此情况。
+     * @param head
+     * @param insertVal
+     * @return
+     */
+    public Node insert(Node head, int insertVal) {
+        if (head == null) {
+            head = new Node(insertVal);
+            head.next = head;
+            return head;
+        }
+
+        Node p = head, q = head.next;
+        Node min = head, max = head;
+        do {
+            if (p.val < min.val) {
+                min = p;
+            }
+            if (p.val > max.val) {
+                max = p;
+            }
+            p = p.next;
+        } while ((p!= head));
+        if (min == max) {
+            // 链表元素都相同
+            Node n = new Node(insertVal, q);
+            p.next = n;
+            return head;
+        }
+
+        while (true) {
+            // 正常插入中间
+            if (p.val <= q.val && p.val <= insertVal && insertVal <= q.val
+                    // 插入两端
+            || (p.val > q.val && (p.val <= insertVal && insertVal >= q.val
+                    || p.val >= insertVal && insertVal <= q.val))) {
+                Node n = new Node(insertVal, q);
+                p.next = n;
+                break;
+            }
+            p = p.next;
+            q = q.next;
+        }
+        // 1 2 4 4    4  ok
+        // 1 2 4 4    3  ok
+        // 1 2 4 4    8  ok
+        // 1 2 4 4    0  ok
+        // 4 4 4 4    0  fail
+        // 4 4 4 4 1  0 ok
+        // 4 4 4 4 3 5  ok
+        return head;
+    }
+
+    public Node insert1(Node head, int insertVal) {
+        if (head == null) {
+            head = new Node(insertVal);
+            head.next = head;
+            return head;
+        }
+
+        Node p = head, q = head.next;
+        do {
+            if (p.val <= q.val && p.val <= insertVal && insertVal <= q.val
+                    // 插入两端
+                    || (p.val > q.val && (p.val <= insertVal && insertVal >= q.val
+                    || p.val >= insertVal && insertVal <= q.val))) {
+                break;
+            }
+            p = p.next;
+            q = q.next;
+        } while ((p!= head));
+        Node n = new Node(insertVal, q);
+        p.next = n;
+
+        return head;
+    }
+
+    static class Node {
+        public int val;
+        public Node next;
+
+        public Node() {}
+
+        public Node(int _val) {
+            val = _val;
+        }
+
+        public Node(int _val, Node _next) {
+            val = _val;
+            next = _next;
+        }
+    };
+
+    public static void main(String[] args) {
+        Node p1 = new Node(3);
+        Node p2 = new Node(4);
+        p1.next = p2;
+        Node p3 = new Node(1);
+        p2.next = p3;
+        p3.next = p1;
+
+        Solution1000 solution1000 = new Solution1000();
+        solution1000.insert1(p1, 2);
+    }
+
+
+
 }
